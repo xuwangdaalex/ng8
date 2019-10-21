@@ -1,0 +1,48 @@
+<h1>Product list</h1>
+
+<div class="filter-bar">
+    <select [(ngModel)]="selectedCategory" (change)="changeCategory()">
+      <option [ngValue]="null" selected>Select Category</option>
+      <option *ngFor="let c of categoryList"
+              [ngValue]="c.CategoryId">
+        {{c.CategoryName}}
+      </option>
+    </select>
+
+    <select [(ngModel)]="selectedSubcategory" [disabled]="!selectedCategory">
+      <option [ngValue]="null" selected>Select Subcategory</option>
+      <option *ngFor="let sc of subcategoryList | filterBy: {CategoryId: selectedCategory}"
+              [ngValue]="sc.SubcategoryId">
+        {{sc.SubcategoryName}}
+      </option>
+    </select>
+</div>
+
+<div *ngIf="selectedCategory && selectedSubcategory">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Category Id</th>
+        <th scope="col">Subcategory Id</th>
+        <th scope="col">Product Id</th>
+        <th scope="col">Product Name</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let p of productList | filterBy: {CategoryId: selectedCategory, SubcategoryId: selectedSubcategory}">
+        <td>{{p.CategoryId}}</td>
+        <td>{{p.SubcategoryId}}</td>
+        <td>{{p.ProductId}}</td>
+        <td>{{p.ProductName}}</td>
+      </tr>
+      <tr>
+        <td colspan="4">
+          <p *ngIf="!(productList | filterBy: {CategoryId: selectedCategory, SubcategoryId: selectedSubcategory}).length">No product found.</p>
+          <input placeholder="Add new product" [(ngModel)]="newproduct">
+          <button (click)="addProduct()">Add</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
